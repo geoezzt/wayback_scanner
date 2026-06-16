@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wayback Recon</title>
+<title>Wayback Recon v2</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
 :root{
@@ -14,21 +14,19 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:var(--ui);min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;
-  background-image:linear-gradient(rgba(0,255,136,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.025) 1px,transparent 1px);
-  background-size:44px 44px;pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.025) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
 
 /* HERO */
-.hero{position:relative;z-index:1;padding:44px 20px 28px;max-width:820px;margin:0 auto;text-align:center}
+.hero{position:relative;z-index:1;padding:44px 20px 28px;max-width:860px;margin:0 auto;text-align:center}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.18);border-radius:20px;padding:5px 14px;font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px}
 .dot-live{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 1.4s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
 h1{font-size:clamp(24px,5vw,46px);font-weight:700;line-height:1.1;letter-spacing:-1px;margin-bottom:10px}
 h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-sub{font-size:14px;color:var(--muted);margin:0 auto 28px;max-width:500px;line-height:1.7}
+.hero-sub{font-size:14px;color:var(--muted);margin:0 auto 28px;max-width:520px;line-height:1.7}
 
 /* INPUT */
-.panel{max-width:820px;margin:0 auto 18px;padding:0 18px;position:relative;z-index:1}
+.panel{max-width:860px;margin:0 auto 18px;padding:0 18px;position:relative;z-index:1}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px}
 .field-lbl{font-size:11px;font-family:var(--mono);color:var(--accent);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:7px}
 .input-row{display:flex;gap:10px;flex-wrap:wrap}
@@ -41,9 +39,13 @@ select option{background:var(--surface)}
 .btn-scan{background:linear-gradient(135deg,#00cc6a,#0055dd);border:none;border-radius:8px;padding:11px 26px;color:#fff;font-size:13px;font-weight:700;font-family:var(--ui);cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn-scan:hover{filter:brightness(1.1);transform:translateY(-1px)}
 .btn-scan:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.options-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.checkbox-lbl{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);cursor:pointer;user-select:none}
+.checkbox-lbl input{accent-color:var(--accent);width:14px;height:14px;cursor:pointer}
+.checkbox-lbl:hover{color:var(--text)}
 
 /* PROGRESS */
-.prog-wrap{max-width:820px;margin:0 auto 16px;padding:0 18px;position:relative;z-index:1;display:none}
+.prog-wrap{max-width:860px;margin:0 auto 16px;padding:0 18px;position:relative;z-index:1;display:none}
 .prog-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px}
 .prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
 .prog-label{font-family:var(--mono);font-size:12px;color:var(--accent)}
@@ -53,22 +55,22 @@ select option{background:var(--surface)}
 .prog-status{margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--muted);min-height:16px}
 
 /* RESULTS */
-.results{max-width:820px;margin:0 auto;padding:0 18px 52px;position:relative;z-index:1}
+.results{max-width:860px;margin:0 auto;padding:0 18px 52px;position:relative;z-index:1}
 
 /* summary grid */
-.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:20px}
-.sum-card{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:10px 14px;text-align:center;transition:border-color .15s;cursor:pointer}
-.sum-card:hover{border-color:#2a3f55}
-.sum-card.active{border-color:var(--accent)}
-.sum-card .num{font-family:var(--mono);font-size:24px;font-weight:700;line-height:1.1}
-.sum-card .lbl{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:7px;margin-bottom:18px}
+.sum-card{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:10px 12px;text-align:center;transition:all .15s;cursor:pointer}
+.sum-card:hover{border-color:#2a3f55;transform:translateY(-1px)}
+.sum-card.active{border-color:var(--accent);background:rgba(0,255,136,.05)}
+.sum-card .num{font-family:var(--mono);font-size:22px;font-weight:700;line-height:1.1}
+.sum-card .lbl{font-size:9px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
 
-/* section tabs */
-.section-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-.sec-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 12px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all .15s;white-space:nowrap}
-.sec-btn:hover{border-color:var(--accent);color:var(--accent)}
-.sec-btn.active{background:rgba(0,255,136,.08);border-color:var(--accent);color:var(--accent)}
-.sec-btn .cnt{opacity:.7;margin-left:4px}
+/* secrets alert */
+.secrets-alert{background:rgba(255,69,96,.07);border:1px solid rgba(255,69,96,.25);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s}
+.secrets-alert:hover{background:rgba(255,69,96,.1)}
+.secrets-alert .icon{font-size:20px;flex-shrink:0}
+.secrets-alert .txt{font-size:13px;font-weight:600;color:var(--red)}
+.secrets-alert .sub{font-size:11px;color:var(--muted);margin-top:2px}
 
 /* export */
 .export-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
@@ -82,49 +84,85 @@ select option{background:var(--surface)}
 .search-bar input::placeholder{color:var(--muted)}
 .result-count{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
 
+/* section title */
+.sec-title{font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
 /* url list */
 .url-list{display:flex;flex-direction:column;gap:5px}
 .url-row-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 12px;display:flex;align-items:center;gap:8px;transition:border-color .15s}
 .url-row-item:hover{border-color:#253040}
-.status-badge{font-size:9px;font-family:var(--mono);font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0;min-width:38px;text-align:center}
+.status-badge{font-size:9px;font-family:var(--mono);font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0;min-width:36px;text-align:center}
 .s200{background:rgba(0,255,136,.12);color:var(--accent);border:1px solid rgba(0,255,136,.25)}
-.s301,.s302,.s307,.s308{background:rgba(56,189,248,.12);color:var(--blue);border:1px solid rgba(56,189,248,.25)}
+.s3xx{background:rgba(56,189,248,.12);color:var(--blue);border:1px solid rgba(56,189,248,.25)}
 .s403{background:rgba(255,140,0,.12);color:var(--orange);border:1px solid rgba(255,140,0,.25)}
 .s404{background:rgba(74,85,104,.1);color:var(--muted);border:1px solid rgba(74,85,104,.2)}
-.s500,.s502,.s503,.s504{background:rgba(255,69,96,.12);color:var(--red);border:1px solid rgba(255,69,96,.25)}
-.s-null{background:rgba(74,85,104,.07);color:var(--muted);border:1px solid rgba(74,85,104,.15)}
-
-.tag-list{display:flex;gap:4px;flex-wrap:wrap;flex-shrink:0}
-.tag{font-size:9px;font-family:var(--mono);padding:2px 6px;border-radius:3px;background:rgba(163,113,247,.1);color:var(--purple);border:1px solid rgba(163,113,247,.2)}
-.tag-api{background:rgba(56,189,248,.1);color:var(--blue);border-color:rgba(56,189,248,.2)}
-.tag-admin,.tag-sensitive{background:rgba(255,69,96,.1);color:var(--red);border-color:rgba(255,69,96,.2)}
-.tag-auth{background:rgba(255,140,0,.1);color:var(--orange);border-color:rgba(255,140,0,.2)}
-.tag-js,.tag-json{background:rgba(255,214,10,.1);color:var(--yellow);border-color:rgba(255,214,10,.2)}
-.tag-params,.tag-interesting-params{background:rgba(0,255,136,.1);color:var(--accent);border-color:rgba(0,255,136,.2)}
-
-.url-text{font-family:var(--mono);font-size:11px;word-break:break-all;flex:1;color:#94a3b8}
-.url-text:hover{color:var(--text)}
-.copy-url{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:3px;padding:2px 7px;font-size:10px;font-family:var(--mono);cursor:pointer;flex-shrink:0;transition:all .15s}
+.s5xx{background:rgba(255,69,96,.12);color:var(--red);border:1px solid rgba(255,69,96,.25)}
+.s-null{background:rgba(74,85,104,.07);color:#334155;border:1px solid rgba(74,85,104,.12)}
+.tag-list{display:flex;gap:3px;flex-wrap:wrap;flex-shrink:0;max-width:160px}
+.tag{font-size:9px;font-family:var(--mono);padding:2px 5px;border-radius:3px;white-space:nowrap}
+.tag-js,.tag-json{background:rgba(255,214,10,.1);color:var(--yellow);border:1px solid rgba(255,214,10,.2)}
+.tag-api{background:rgba(56,189,248,.1);color:var(--blue);border:1px solid rgba(56,189,248,.2)}
+.tag-admin,.tag-sensitive{background:rgba(255,69,96,.1);color:var(--red);border:1px solid rgba(255,69,96,.2)}
+.tag-auth{background:rgba(255,140,0,.1);color:var(--orange);border:1px solid rgba(255,140,0,.2)}
+.tag-params,.tag-interesting-params{background:rgba(0,255,136,.1);color:var(--accent);border:1px solid rgba(0,255,136,.2)}
+.tag-default{background:rgba(163,113,247,.1);color:var(--purple);border:1px solid rgba(163,113,247,.2)}
+.url-link{font-family:var(--mono);font-size:11px;word-break:break-all;flex:1;color:#6b8aaa;text-decoration:none;transition:color .15s}
+.url-link:hover{color:var(--accent)}
+.copy-url{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:3px;padding:2px 7px;font-size:10px;font-family:var(--mono);cursor:pointer;flex-shrink:0;transition:all .15s;white-space:nowrap}
 .copy-url:hover{border-color:var(--accent);color:var(--accent)}
+
+/* secrets list */
+.secret-card{background:var(--card);border:1px solid var(--border);border-radius:9px;margin-bottom:10px;overflow:hidden}
+.secret-card.sev-critical{border-left:3px solid var(--red)}
+.secret-card.sev-high{border-left:3px solid var(--orange)}
+.secret-card.sev-medium{border-left:3px solid var(--yellow)}
+.secret-card.sev-low{border-left:3px solid var(--blue)}
+.secret-card.sev-info{border-left:3px solid var(--muted)}
+.sc-head{padding:11px 14px;display:flex;align-items:center;gap:9px;cursor:pointer}
+.sc-head:hover{background:rgba(255,255,255,.02)}
+.sev-pill{font-size:9px;font-family:var(--mono);font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:4px;flex-shrink:0}
+.sp-critical{background:rgba(255,69,96,.15);color:var(--red);border:1px solid rgba(255,69,96,.3)}
+.sp-high{background:rgba(255,140,0,.15);color:var(--orange);border:1px solid rgba(255,140,0,.3)}
+.sp-medium{background:rgba(255,214,10,.1);color:var(--yellow);border:1px solid rgba(255,214,10,.25)}
+.sp-low{background:rgba(56,189,248,.1);color:var(--blue);border:1px solid rgba(56,189,248,.25)}
+.sp-info{background:rgba(74,85,104,.15);color:var(--muted);border:1px solid rgba(74,85,104,.3)}
+.sc-type{font-size:13px;font-weight:600;flex:1}
+.sc-src{font-family:var(--mono);font-size:10px;color:var(--muted);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-toggle{color:var(--muted);font-size:11px;transition:transform .2s}
+.secret-card.open .sc-toggle{transform:rotate(180deg)}
+.sc-body{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
+.secret-card.open .sc-body{display:block}
+.match-val{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--accent);word-break:break-all;white-space:pre-wrap}
+.meta-grid{display:grid;grid-template-columns:80px 1fr;gap:4px 10px;margin-top:10px;font-size:11px}
+.mk{color:var(--muted);font-family:var(--mono)}
+.mv{font-family:var(--mono);word-break:break-all}
+.src-link{color:var(--blue);text-decoration:none;font-family:var(--mono);font-size:11px}
+.src-link:hover{color:var(--accent);text-decoration:underline}
+
+/* more btn */
+.more-btn{width:100%;background:transparent;border:1px dashed var(--border);color:var(--muted);border-radius:7px;padding:10px;font-size:12px;cursor:pointer;font-family:var(--ui);transition:all .15s;margin-top:8px}
+.more-btn:hover{border-color:var(--accent);color:var(--accent)}
 
 /* empty */
 .empty{text-align:center;padding:48px 20px;color:var(--muted)}
 .empty-icon{font-size:40px;opacity:.35;margin-bottom:12px}
 .empty-title{font-size:14px;font-weight:600;color:#64748b}
+.empty-sub{font-size:12px;margin-top:6px;line-height:1.6}
 
 @media(max-width:580px){
   .input-row{flex-direction:column}
   select,.btn-scan{width:100%}
   .summary-grid{grid-template-columns:repeat(3,1fr)}
+  .tag-list{display:none}
 }
 </style>
 </head>
 <body>
 
 <div class="hero">
-  <div class="eyebrow"><span class="dot-live"></span> Web Archive Recon</div>
+  <div class="eyebrow"><span class="dot-live"></span> Web Archive Recon v2</div>
   <h1>Wayback <em>Recon</em></h1>
-  <p class="hero-sub">أدخلي الـ domain — بيجيب كل الروابط من Web Archive ويصنفها: status codes، JS files، API endpoints، admin panels، sensitive files وأكتر.</p>
+  <p class="hero-sub">بيجيب كل الروابط من Wayback Machine، يفحص الـ status codes، يسكان الـ JS files عن secrets، ويصنف كل حاجة تلقائي.</p>
 </div>
 
 <div class="panel">
@@ -134,11 +172,17 @@ select option{background:var(--surface)}
       <input type="text" id="domain" placeholder="target.com" />
       <select id="limit">
         <option value="500">500 URLs</option>
-        <option value="1000" selected>1000 URLs</option>
-        <option value="2000">2000 URLs</option>
+        <option value="1000">1000 URLs</option>
+        <option value="2000" selected>2000 URLs</option>
         <option value="5000">5000 URLs</option>
       </select>
-      <button class="btn-scan" onclick="startScan()">⚡ Scan</button>
+      <button class="btn-scan" id="scan-btn" onclick="startScan()">⚡ Scan</button>
+    </div>
+    <div class="options-row">
+      <label class="checkbox-lbl">
+        <input type="checkbox" id="opt-secrets" checked />
+        Scan JS/JSON for secrets
+      </label>
     </div>
   </div>
 </div>
@@ -160,55 +204,60 @@ select option{background:var(--surface)}
 let scanData = null;
 let activeSection = 'alive';
 let searchQ = '';
+let showLimit = 200;
 
-const SECTION_META = {
-  // status buckets
-  alive:        { label:'✅ Alive (200)',      color:'var(--accent)',  key:'bucket' },
-  redirect:     { label:'↪ Redirects',         color:'var(--blue)',    key:'bucket' },
-  forbidden:    { label:'🔒 Forbidden (403)',  color:'var(--orange)',  key:'bucket' },
-  server_error: { label:'💥 Server Errors',    color:'var(--red)',     key:'bucket' },
-  not_found:    { label:'404 Not Found',       color:'var(--muted)',   key:'bucket' },
-  unchecked:    { label:'⬜ Unchecked',        color:'var(--muted)',   key:'bucket' },
+const SECTIONS = [
+  // status
+  { id:'alive',              label:'✅ Alive 200',      color:'var(--accent)',  type:'bucket' },
+  { id:'redirect',           label:'↪ Redirects',       color:'var(--blue)',    type:'bucket' },
+  { id:'forbidden',          label:'🔒 403',            color:'var(--orange)',  type:'bucket' },
+  { id:'server_error',       label:'💥 5xx',            color:'var(--red)',     type:'bucket' },
+  { id:'not_found',          label:'404',               color:'var(--muted)',   type:'bucket' },
+  { id:'unchecked',          label:'⬜ Unchecked',      color:'#334155',        type:'bucket' },
   // special
-  js:                 { label:'📜 JS Files',          color:'var(--yellow)',  key:'special' },
-  json:               { label:'{ } JSON Files',       color:'var(--yellow)',  key:'special' },
-  api_endpoints:      { label:'🔌 API Endpoints',     color:'var(--blue)',    key:'special' },
-  with_params:        { label:'? With Params',        color:'var(--accent)',  key:'special' },
-  interesting_params: { label:'🎯 Juicy Params',      color:'var(--accent)',  key:'special' },
-  admin_panels:       { label:'🚨 Admin Panels',      color:'var(--red)',     key:'special' },
-  auth_endpoints:     { label:'🔑 Auth Endpoints',    color:'var(--orange)',  key:'special' },
-  file_uploads:       { label:'📤 Upload Endpoints',  color:'var(--orange)',  key:'special' },
-  graphql:            { label:'⬡ GraphQL',            color:'var(--purple)',  key:'special' },
-  swagger_docs:       { label:'📖 Swagger/Docs',      color:'var(--blue)',    key:'special' },
-  sensitive_files:    { label:'⚠️ Sensitive Files',   color:'var(--red)',     key:'special' },
-  debug_endpoints:    { label:'🐛 Debug/Test',        color:'var(--orange)',  key:'special' },
-  webhooks:           { label:'🪝 Webhooks',          color:'var(--purple)',  key:'special' },
-  backend_files:      { label:'⚙️ Backend Files',     color:'var(--orange)',  key:'special' },
-};
+  { id:'js',                 label:'📜 JS Files',       color:'var(--yellow)',  type:'special' },
+  { id:'json',               label:'{ } JSON',          color:'var(--yellow)',  type:'special' },
+  { id:'api_endpoints',      label:'🔌 API',            color:'var(--blue)',    type:'special' },
+  { id:'with_params',        label:'? Params',          color:'var(--accent)',  type:'special' },
+  { id:'interesting_params', label:'🎯 Juicy Params',   color:'#00ffaa',        type:'special' },
+  { id:'admin_panels',       label:'🚨 Admin',          color:'var(--red)',     type:'special' },
+  { id:'auth_endpoints',     label:'🔑 Auth',           color:'var(--orange)',  type:'special' },
+  { id:'file_uploads',       label:'📤 Uploads',        color:'var(--orange)',  type:'special' },
+  { id:'graphql',            label:'⬡ GraphQL',         color:'var(--purple)',  type:'special' },
+  { id:'swagger_docs',       label:'📖 Swagger',        color:'var(--blue)',    type:'special' },
+  { id:'sensitive_files',    label:'⚠️ Sensitive',      color:'var(--red)',     type:'special' },
+  { id:'debug_endpoints',    label:'🐛 Debug',          color:'var(--orange)',  type:'special' },
+  { id:'webhooks',           label:'🪝 Webhooks',       color:'var(--purple)',  type:'special' },
+  { id:'backend_files',      label:'⚙️ Backend',        color:'var(--orange)',  type:'special' },
+  // secrets
+  { id:'secrets',            label:'🔐 Secrets',        color:'var(--red)',     type:'secrets' },
+];
 
 const steps = [
-  { pct:8,  msg:'Connecting to Wayback Machine CDX API...' },
-  { pct:20, msg:'Fetching archived URLs from Web Archive...' },
-  { pct:40, msg:'Fetching from Common Crawl index...' },
-  { pct:58, msg:'Deduplicating and classifying URLs...' },
-  { pct:72, msg:'Running status checks (HEAD requests)...' },
-  { pct:88, msg:'Building categories and buckets...' },
-  { pct:95, msg:'Almost done...' },
+  { pct:5,  msg:'Connecting to Wayback Machine CDX API...' },
+  { pct:18, msg:'Fetching archived URLs (200 status filter)...' },
+  { pct:32, msg:'Fetching JS/JSON specific URLs from archive...' },
+  { pct:45, msg:'Querying subdomains from Wayback...' },
+  { pct:58, msg:'Fetching from Common Crawl index...' },
+  { pct:68, msg:'Running HEAD status checks...' },
+  { pct:80, msg:'Scanning JS files for secrets and sensitive data...' },
+  { pct:92, msg:'Classifying and building categories...' },
 ];
 
 async function startScan() {
-  const domain = document.getElementById('domain').value.trim().replace(/^https?:\/\//,'').replace(/\/.*/,'');
+  const domain = document.getElementById('domain').value.trim().replace(/^https?:\/\//,'').replace(/\/.*/,'').replace(/^www\./,'');
   if (!domain) { alert('أدخلي الـ domain'); return; }
 
-  scanData = null; activeSection = 'alive'; searchQ = '';
+  scanData = null; activeSection = 'alive'; searchQ = ''; showLimit = 200;
   document.getElementById('results').innerHTML = '';
   document.getElementById('prog-wrap').style.display = 'block';
-  document.querySelector('.btn-scan').disabled = true;
+  document.getElementById('scan-btn').disabled = true;
+  document.getElementById('fill').style.width = '0%';
 
   const limit = parseInt(document.getElementById('limit').value);
+  const scanSecrets = document.getElementById('opt-secrets').checked;
   document.getElementById('prog-count').textContent = `limit: ${limit}`;
 
-  // animate steps
   let stepIdx = 0;
   const stepTimer = setInterval(() => {
     if (stepIdx < steps.length) {
@@ -216,141 +265,176 @@ async function startScan() {
       document.getElementById('fill').style.width = s.pct + '%';
       document.getElementById('prog-status').textContent = s.msg;
     }
-  }, 2200);
+  }, 2800);
 
   try {
     const r = await fetch('/api/wayback', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ domain, limit }),
+      body: JSON.stringify({ domain, limit, scan_secrets: scanSecrets }),
     });
     clearInterval(stepTimer);
     if (!r.ok) { const e = await r.json(); throw new Error(e.error || 'Server error'); }
     scanData = await r.json();
 
     document.getElementById('fill').style.width = '100%';
-    document.getElementById('prog-label').textContent = '// Scan complete';
-    document.getElementById('prog-count').textContent = `${scanData.total_found} URLs found`;
+    document.getElementById('prog-label').textContent = '// Scan complete ✅';
+    document.getElementById('prog-count').textContent = `${scanData.total_found} URLs · ${scanData.secrets_found} secrets`;
     document.getElementById('prog-status').textContent =
-      `✅ ${scanData.total_found} URLs fetched · ${scanData.total_checked} status-checked · ${scanData.domain}`;
+      `✅ ${scanData.total_found} URLs fetched · ${scanData.total_checked} status-checked · ${scanData.secrets_found} secrets found`;
 
     renderResults();
   } catch(e) {
     clearInterval(stepTimer);
     document.getElementById('prog-status').textContent = '⚠ Error: ' + e.message;
+    document.getElementById('prog-label').textContent = '// Error';
   }
-  document.querySelector('.btn-scan').disabled = false;
+  document.getElementById('scan-btn').disabled = false;
 }
 
 function getList(section) {
   if (!scanData) return [];
-  const meta = SECTION_META[section];
-  if (!meta) return [];
-  return meta.key === 'bucket'
-    ? (scanData.buckets[section] || [])
-    : (scanData.special[section] || []);
+  if (section === 'secrets') return scanData.secrets || [];
+  const s = SECTIONS.find(x => x.id === section);
+  if (!s) return [];
+  if (s.type === 'bucket') return scanData.buckets[section] || [];
+  if (s.type === 'special') return scanData.special[section] || [];
+  return [];
+}
+
+function statusClass(st) {
+  if (st === 200) return 's200';
+  if ([301,302,303,307,308].includes(st)) return 's3xx';
+  if (st === 403) return 's403';
+  if (st === 404) return 's404';
+  if (st >= 500) return 's5xx';
+  return 's-null';
+}
+
+function tagClass(t) {
+  if (['js','json'].includes(t)) return 'tag tag-js';
+  if (t === 'api') return 'tag tag-api';
+  if (['admin','sensitive'].includes(t)) return 'tag tag-admin';
+  if (t === 'auth') return 'tag tag-auth';
+  if (['params','interesting-params'].includes(t)) return 'tag tag-params';
+  return 'tag tag-default';
 }
 
 function renderResults() {
   if (!scanData) return;
-  const b = scanData.buckets, sp = scanData.special;
-
-  // Build summary grid
-  const sections = [
-    { id:'alive',        n:b.alive?.length||0,        color:'var(--accent)',  label:'Alive 200' },
-    { id:'redirect',     n:b.redirect?.length||0,      color:'var(--blue)',    label:'Redirects' },
-    { id:'forbidden',    n:b.forbidden?.length||0,     color:'var(--orange)',  label:'403' },
-    { id:'server_error', n:b.server_error?.length||0,  color:'var(--red)',     label:'5xx Errors' },
-    { id:'not_found',    n:b.not_found?.length||0,     color:'var(--muted)',   label:'404' },
-    { id:'unchecked',    n:b.unchecked?.length||0,     color:'#334155',        label:'Unchecked' },
-    { id:'js',                 n:sp.js?.length||0,                color:'var(--yellow)',  label:'JS Files' },
-    { id:'json',               n:sp.json?.length||0,              color:'var(--yellow)',  label:'JSON' },
-    { id:'api_endpoints',      n:sp.api_endpoints?.length||0,     color:'var(--blue)',    label:'API' },
-    { id:'with_params',        n:sp.with_params?.length||0,       color:'var(--accent)',  label:'w/ Params' },
-    { id:'interesting_params', n:sp.interesting_params?.length||0,color:'#00ffaa',        label:'Juicy Params' },
-    { id:'admin_panels',       n:sp.admin_panels?.length||0,      color:'var(--red)',     label:'Admin' },
-    { id:'auth_endpoints',     n:sp.auth_endpoints?.length||0,    color:'var(--orange)',  label:'Auth' },
-    { id:'file_uploads',       n:sp.file_uploads?.length||0,      color:'var(--orange)',  label:'Uploads' },
-    { id:'graphql',            n:sp.graphql?.length||0,           color:'var(--purple)',  label:'GraphQL' },
-    { id:'swagger_docs',       n:sp.swagger_docs?.length||0,      color:'var(--blue)',    label:'Swagger' },
-    { id:'sensitive_files',    n:sp.sensitive_files?.length||0,   color:'var(--red)',     label:'Sensitive' },
-    { id:'debug_endpoints',    n:sp.debug_endpoints?.length||0,   color:'var(--orange)',  label:'Debug' },
-    { id:'webhooks',           n:sp.webhooks?.length||0,          color:'var(--purple)',  label:'Webhooks' },
-    { id:'backend_files',      n:sp.backend_files?.length||0,     color:'var(--orange)',  label:'Backend' },
-  ];
+  const b = scanData.buckets, sp = scanData.special, sec = scanData.secrets || [];
 
   let html = `<div class="summary-grid">`;
-  sections.forEach(s => {
+  SECTIONS.forEach(s => {
+    const list = getList(s.id);
     html += `<div class="sum-card ${activeSection===s.id?'active':''}" onclick="setSection('${s.id}')">
-      <div class="num" style="color:${s.color}">${s.n}</div>
+      <div class="num" style="color:${s.color}">${list.length}</div>
       <div class="lbl">${s.label}</div>
     </div>`;
   });
   html += `</div>`;
 
-  // Current section list
-  const list = getList(activeSection);
-  const filtered = list.filter(r => !searchQ || r.url.toLowerCase().includes(searchQ.toLowerCase()));
-  const meta = SECTION_META[activeSection];
+  // secrets alert
+  if (sec.length > 0 && activeSection !== 'secrets') {
+    html += `<div class="secrets-alert" onclick="setSection('secrets')">
+      <div class="icon">🔐</div>
+      <div>
+        <div class="txt">⚠ ${sec.length} Secret${sec.length>1?'s':''} Found!</div>
+        <div class="sub">Click to view API keys, tokens, and credentials found in JS/source code</div>
+      </div>
+    </div>`;
+  }
 
-  html += `
-  <div class="export-row">
-    <button class="exp-btn" onclick="exportTxt()">⬇ TXT (current)</button>
+  // export
+  html += `<div class="export-row">
+    <button class="exp-btn" onclick="exportTxt()">⬇ TXT (section)</button>
     <button class="exp-btn" onclick="exportAllTxt()">⬇ TXT (all)</button>
     <button class="exp-btn" onclick="exportJSON()">⬇ JSON (full)</button>
-    <button class="exp-btn" onclick="copySection()">📋 Copy section</button>
-  </div>
+    <button class="exp-btn" onclick="copySection()">📋 Copy</button>
+  </div>`;
 
-  <div style="margin-bottom:12px">
-    <span style="font-size:13px;font-weight:600;color:${meta?.color||'var(--text)'}">${meta?.label||activeSection}</span>
-    <span style="font-size:11px;color:var(--muted);margin-left:8px;font-family:var(--mono)">${list.length} total</span>
-  </div>
+  const curSection = SECTIONS.find(s => s.id === activeSection);
+  const list = getList(activeSection);
+  const filtered = activeSection === 'secrets'
+    ? list.filter(r => !searchQ || r.type.toLowerCase().includes(searchQ.toLowerCase()) || r.match.toLowerCase().includes(searchQ.toLowerCase()) || r.source.toLowerCase().includes(searchQ.toLowerCase()))
+    : list.filter(r => !searchQ || r.url.toLowerCase().includes(searchQ.toLowerCase()));
 
-  <div class="search-bar">
-    <input placeholder="Filter URLs..." oninput="doSearch(this.value)" value="${searchQ}" />
+  html += `<div class="sec-title" style="color:${curSection?.color||'var(--text)'}">
+    ${curSection?.label||activeSection}
+    <span style="font-size:11px;color:var(--muted);font-weight:400;font-family:var(--mono)">${list.length} total</span>
+  </div>`;
+
+  html += `<div class="search-bar">
+    <input placeholder="Filter..." oninput="doSearch(this.value)" value="${esc(searchQ)}" />
     <span class="result-count">${filtered.length} results</span>
-  </div>
+  </div>`;
 
-  <div class="url-list">`;
-
-  if (!filtered.length) {
-    html += `<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No URLs in this category</div></div>`;
+  if (activeSection === 'secrets') {
+    // SECRETS VIEW
+    if (!filtered.length) {
+      html += `<div class="empty"><div class="empty-icon">✅</div><div class="empty-title">No secrets found</div><div class="empty-sub">JS files were scanned but no sensitive data was detected.</div></div>`;
+    } else {
+      const sevOrder = {critical:0,high:1,medium:2,low:3,info:4};
+      const sorted = [...filtered].sort((a,b) => (sevOrder[a.severity]||4)-(sevOrder[b.severity]||4));
+      sorted.slice(0, showLimit).forEach((f, i) => {
+        html += `<div class="secret-card sev-${f.severity}" id="sc-${i}">
+          <div class="sc-head" onclick="toggleSecret(${i})">
+            <span class="sev-pill sp-${f.severity}">${f.severity}</span>
+            <span class="sc-type">${esc(f.type)}</span>
+            <a class="src-link" href="${esc(f.source)}" target="_blank" rel="noopener" onclick="e=>e.stopPropagation()" title="${esc(f.source)}">${esc(new URL(f.source).pathname.slice(-40)||f.source)}</a>
+            <span class="sc-toggle">▼</span>
+          </div>
+          <div class="sc-body">
+            <div class="match-val">${esc(f.match)}</div>
+            <div class="meta-grid">
+              <span class="mk">Type</span><span class="mv">${esc(f.type)}</span>
+              <span class="mk">Severity</span><span class="mv" style="color:var(--red)">${f.severity.toUpperCase()}</span>
+              <span class="mk">Source</span><span class="mv"><a class="src-link" href="${esc(f.source)}" target="_blank" rel="noopener">${esc(f.source)}</a></span>
+              <span class="mk">Length</span><span class="mv">${f.match.length} chars</span>
+            </div>
+          </div>
+        </div>`;
+      });
+    }
   } else {
-    filtered.slice(0, 500).forEach(r => {
-      const st = r.status;
-      const sc = st === 200 ? 's200' : st === 301||st===302||st===307||st===308 ? 's302' :
-                 st === 403 ? 's403' : st === 404 ? 's404' :
-                 st >= 500 ? 's500' : 's-null';
-      const stLabel = st && st > 0 ? st : '—';
-
-      const tagHtml = (r.tags||[]).slice(0,4).map(t => {
-        const cls = ['api','admin','sensitive','auth','js','json','params','interesting-params'].includes(t)
-          ? `tag tag-${t}` : 'tag';
-        return `<span class="${cls}">${t}</span>`;
-      }).join('');
-
-      html += `<div class="url-row-item">
-        <span class="status-badge ${sc}">${stLabel}</span>
-        ${tagHtml ? `<div class="tag-list">${tagHtml}</div>` : ''}
-        <span class="url-text">${esc(r.url)}</span>
-        <button class="copy-url" onclick="cpUrl(event,'${esc(r.url)}')">copy</button>
-      </div>`;
-    });
-    if (filtered.length > 500) {
-      html += `<div style="text-align:center;padding:14px;font-size:12px;color:var(--muted);font-family:var(--mono)">
-        ... and ${filtered.length - 500} more — export TXT to see all
-      </div>`;
+    // URL VIEW
+    if (!filtered.length) {
+      html += `<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No URLs in this category</div></div>`;
+    } else {
+      html += `<div class="url-list">`;
+      filtered.slice(0, showLimit).forEach(r => {
+        const st = r.status;
+        const sc = statusClass(st);
+        const stLabel = st && st > 0 ? st : '—';
+        const tags = (r.tags||[]).slice(0,3);
+        html += `<div class="url-row-item">
+          <span class="status-badge ${sc}">${stLabel}</span>
+          <div class="tag-list">${tags.map(t=>`<span class="${tagClass(t)}">${t}</span>`).join('')}</div>
+          <a class="url-link" href="${esc(r.url)}" target="_blank" rel="noopener" title="${esc(r.url)}">${esc(r.url)}</a>
+          <button class="copy-url" onclick="cpUrl(event,'${esc(r.url)}')">copy</button>
+        </div>`;
+      });
+      html += `</div>`;
     }
   }
 
-  html += `</div>`;
+  if (filtered.length > showLimit) {
+    html += `<button class="more-btn" onclick="loadMore()">Load more (${filtered.length - showLimit} remaining)</button>`;
+  }
+
   document.getElementById('results').innerHTML = html;
 }
 
-function setSection(s) { activeSection = s; searchQ = ''; renderResults(); }
-function doSearch(q) { searchQ = q; renderResults(); }
+function toggleSecret(i) {
+  document.getElementById('sc-'+i)?.classList.toggle('open');
+}
+
+function setSection(s) { activeSection = s; searchQ = ''; showLimit = 200; renderResults(); }
+function doSearch(q) { searchQ = q; showLimit = 200; renderResults(); }
+function loadMore() { showLimit += 200; renderResults(); }
 
 function cpUrl(e, url) {
+  e.preventDefault(); e.stopPropagation();
   navigator.clipboard.writeText(url).then(() => {
     e.target.textContent = '✓'; setTimeout(() => e.target.textContent = 'copy', 1200);
   });
@@ -358,25 +442,33 @@ function cpUrl(e, url) {
 
 function exportTxt() {
   if (!scanData) return;
-  const list = getList(activeSection).map(r => r.url).join('\n');
+  const list = activeSection === 'secrets'
+    ? getList('secrets').map(s => `[${s.severity.toUpperCase()}] ${s.type}\nMatch: ${s.match}\nSource: ${s.source}\n`).join('\n')
+    : getList(activeSection).map(r => r.url).join('\n');
   dl(`${scanData.domain}-${activeSection}.txt`, list, 'text/plain');
 }
 
 function exportAllTxt() {
   if (!scanData) return;
   const b = scanData.buckets, sp = scanData.special;
-  let txt = `# Wayback Recon — ${scanData.domain}\n# Date: ${new Date().toISOString().slice(0,10)}\n\n`;
-  txt += `## ALIVE (200)\n${b.alive?.map(r=>r.url).join('\n')||''}\n\n`;
-  txt += `## REDIRECTS\n${b.redirect?.map(r=>r.url).join('\n')||''}\n\n`;
-  txt += `## FORBIDDEN (403)\n${b.forbidden?.map(r=>r.url).join('\n')||''}\n\n`;
-  txt += `## SERVER ERRORS (5xx)\n${b.server_error?.map(r=>r.url).join('\n')||''}\n\n`;
-  txt += `## JS FILES\n${sp.js?.map(r=>r.url).join('\n')||''}\n\n`;
-  txt += `## JSON FILES\n${sp.json?.map(r=>r.url).join('\n')||''}\n\n`;
-  txt += `## API ENDPOINTS\n${sp.api_endpoints?.map(r=>r.url).join('\n')||''}\n\n`;
-  txt += `## WITH PARAMS\n${sp.with_params?.map(r=>r.url).join('\n')||''}\n\n`;
-  txt += `## JUICY PARAMS\n${sp.interesting_params?.map(r=>r.url).join('\n')||''}\n\n`;
-  txt += `## ADMIN PANELS\n${sp.admin_panels?.map(r=>r.url).join('\n')||''}\n\n`;
-  txt += `## SENSITIVE FILES\n${sp.sensitive_files?.map(r=>r.url).join('\n')||''}\n\n`;
+  let txt = `# Wayback Recon — ${scanData.domain}\n# Date: ${new Date().toISOString().slice(0,10)}\n# Total: ${scanData.total_found} URLs · ${scanData.secrets_found} secrets\n\n`;
+  const sections = [
+    ['ALIVE (200)', b.alive], ['REDIRECTS', b.redirect], ['FORBIDDEN (403)', b.forbidden],
+    ['SERVER ERRORS 5xx', b.server_error], ['JS FILES', sp.js], ['JSON FILES', sp.json],
+    ['API ENDPOINTS', sp.api_endpoints], ['WITH PARAMS', sp.with_params],
+    ['JUICY PARAMS', sp.interesting_params], ['ADMIN PANELS', sp.admin_panels],
+    ['AUTH ENDPOINTS', sp.auth_endpoints], ['SENSITIVE FILES', sp.sensitive_files],
+    ['SWAGGER/DOCS', sp.swagger_docs], ['GRAPHQL', sp.graphql],
+  ];
+  sections.forEach(([name, list]) => {
+    if (list?.length) txt += `## ${name} (${list.length})\n${list.map(r=>r.url).join('\n')}\n\n`;
+  });
+  if (scanData.secrets?.length) {
+    txt += `## SECRETS FOUND (${scanData.secrets.length})\n`;
+    scanData.secrets.forEach(s => {
+      txt += `[${s.severity.toUpperCase()}] ${s.type}\nMatch: ${s.match}\nSource: ${s.source}\n\n`;
+    });
+  }
   dl(`${scanData.domain}-full-recon.txt`, txt, 'text/plain');
 }
 
@@ -387,8 +479,10 @@ function exportJSON() {
 
 function copySection() {
   if (!scanData) return;
-  const list = getList(activeSection).map(r => r.url).join('\n');
-  navigator.clipboard.writeText(list).then(() => alert(`Copied ${getList(activeSection).length} URLs`));
+  const list = activeSection === 'secrets'
+    ? getList('secrets').map(s => `[${s.severity}] ${s.type}: ${s.match} (${s.source})`).join('\n')
+    : getList(activeSection).map(r => r.url).join('\n');
+  navigator.clipboard.writeText(list).then(() => alert(`Copied ${getList(activeSection).length} items`));
 }
 
 function dl(name, content, type) {
