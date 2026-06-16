@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/wayback.js": {
+      "maxDuration": 30
+    }
+  }
+}
