@@ -3,29 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wayback Recon v2</title>
+<title>Wayback Recon</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
 :root{
-  --bg:#060910;--surface:#0d1117;--card:#0f1923;--border:#1a2535;
+  --bg:#060910;--card:#0f1923;--border:#1a2535;
   --accent:#00ff88;--blue:#38bdf8;--red:#ff4560;--orange:#ff8c00;
   --yellow:#ffd60a;--purple:#a371f7;--muted:#4a5568;--text:#e2e8f0;
   --mono:'JetBrains Mono',monospace;--ui:'Inter',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:var(--ui);min-height:100vh;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--ui);min-height:100vh}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.025) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
 
-/* HERO */
 .hero{position:relative;z-index:1;padding:44px 20px 28px;max-width:860px;margin:0 auto;text-align:center}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.18);border-radius:20px;padding:5px 14px;font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px}
-.dot-live{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 1.4s infinite}
+.dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 1.4s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
-h1{font-size:clamp(24px,5vw,46px);font-weight:700;line-height:1.1;letter-spacing:-1px;margin-bottom:10px}
+h1{font-size:clamp(24px,5vw,46px);font-weight:700;letter-spacing:-1px;margin-bottom:10px}
 h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-sub{font-size:14px;color:var(--muted);margin:0 auto 28px;max-width:520px;line-height:1.7}
 
-/* INPUT */
 .panel{max-width:860px;margin:0 auto 18px;padding:0 18px;position:relative;z-index:1}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px}
 .field-lbl{font-size:11px;font-family:var(--mono);color:var(--accent);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:7px}
@@ -34,135 +32,118 @@ input[type=text]{flex:1;min-width:180px;background:var(--bg);border:1px solid va
 input[type=text]:focus{border-color:var(--accent)}
 input::placeholder{color:var(--muted)}
 select{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer}
-select:focus{border-color:var(--accent)}
-select option{background:var(--surface)}
 .btn-scan{background:linear-gradient(135deg,#00cc6a,#0055dd);border:none;border-radius:8px;padding:11px 26px;color:#fff;font-size:13px;font-weight:700;font-family:var(--ui);cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn-scan:hover{filter:brightness(1.1);transform:translateY(-1px)}
 .btn-scan:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.options-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
-.checkbox-lbl{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);cursor:pointer;user-select:none}
-.checkbox-lbl input{accent-color:var(--accent);width:14px;height:14px;cursor:pointer}
-.checkbox-lbl:hover{color:var(--text)}
 
-/* PROGRESS */
+/* steps progress */
 .prog-wrap{max-width:860px;margin:0 auto 16px;padding:0 18px;position:relative;z-index:1;display:none}
 .prog-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px}
-.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
-.prog-label{font-family:var(--mono);font-size:12px;color:var(--accent)}
-.prog-count{font-family:var(--mono);font-size:11px;color:var(--muted)}
-.track{background:var(--border);border-radius:3px;height:3px;overflow:hidden}
-.fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--blue));width:0;transition:width .4s;border-radius:3px}
-.prog-status{margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--muted);min-height:16px}
+.steps{display:flex;gap:0;margin-bottom:12px}
+.step{flex:1;text-align:center;position:relative}
+.step::after{content:'';position:absolute;top:12px;right:-50%;width:100%;height:2px;background:var(--border);z-index:0}
+.step:last-child::after{display:none}
+.step-dot{width:24px;height:24px;border-radius:50%;background:var(--border);border:2px solid var(--border);font-size:10px;font-family:var(--mono);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;position:relative;z-index:1;transition:all .3s}
+.step.active .step-dot{background:var(--accent);border-color:var(--accent);color:#000;font-weight:700}
+.step.done .step-dot{background:rgba(0,255,136,.2);border-color:var(--accent);color:var(--accent)}
+.step-lbl{font-size:10px;color:var(--muted);font-family:var(--mono)}
+.step.active .step-lbl{color:var(--accent)}
+.step.done .step-lbl{color:var(--accent);opacity:.6}
+.track{background:var(--border);border-radius:3px;height:3px;overflow:hidden;margin-top:10px}
+.fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--blue));width:0;transition:width .5s;border-radius:3px}
+.prog-status{margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--muted)}
 
-/* RESULTS */
+/* results */
 .results{max-width:860px;margin:0 auto;padding:0 18px 52px;position:relative;z-index:1}
-
-/* summary grid */
 .summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:7px;margin-bottom:18px}
-.sum-card{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:10px 12px;text-align:center;transition:all .15s;cursor:pointer}
+.sum-card{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:10px 12px;text-align:center;cursor:pointer;transition:all .15s}
 .sum-card:hover{border-color:#2a3f55;transform:translateY(-1px)}
-.sum-card.active{border-color:var(--accent);background:rgba(0,255,136,.05)}
+.sum-card.active{border-color:var(--accent);background:rgba(0,255,136,.04)}
 .sum-card .num{font-family:var(--mono);font-size:22px;font-weight:700;line-height:1.1}
 .sum-card .lbl{font-size:9px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
 
-/* secrets alert */
 .secrets-alert{background:rgba(255,69,96,.07);border:1px solid rgba(255,69,96,.25);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s}
-.secrets-alert:hover{background:rgba(255,69,96,.1)}
-.secrets-alert .icon{font-size:20px;flex-shrink:0}
-.secrets-alert .txt{font-size:13px;font-weight:600;color:var(--red)}
-.secrets-alert .sub{font-size:11px;color:var(--muted);margin-top:2px}
+.secrets-alert:hover{background:rgba(255,69,96,.12)}
+.secrets-alert .stxt{font-size:13px;font-weight:600;color:var(--red)}
+.secrets-alert .ssub{font-size:11px;color:var(--muted);margin-top:2px}
 
-/* export */
 .export-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
 .exp-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 13px;font-size:11px;cursor:pointer;font-family:var(--ui);transition:all .15s}
 .exp-btn:hover{border-color:var(--blue);color:var(--blue)}
 
-/* search */
+.sec-title{font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .search-bar{display:flex;gap:8px;margin-bottom:12px;align-items:center}
-.search-bar input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:8px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;transition:border-color .2s}
+.search-bar input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:8px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none}
 .search-bar input:focus{border-color:var(--accent)}
 .search-bar input::placeholder{color:var(--muted)}
-.result-count{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
+.res-count{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
 
-/* section title */
-.sec-title{font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-
-/* url list */
 .url-list{display:flex;flex-direction:column;gap:5px}
-.url-row-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 12px;display:flex;align-items:center;gap:8px;transition:border-color .15s}
-.url-row-item:hover{border-color:#253040}
-.status-badge{font-size:9px;font-family:var(--mono);font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0;min-width:36px;text-align:center}
+.url-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 12px;display:flex;align-items:center;gap:8px;transition:border-color .15s}
+.url-item:hover{border-color:#253040}
+.sbadge{font-size:9px;font-family:var(--mono);font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0;min-width:36px;text-align:center}
 .s200{background:rgba(0,255,136,.12);color:var(--accent);border:1px solid rgba(0,255,136,.25)}
 .s3xx{background:rgba(56,189,248,.12);color:var(--blue);border:1px solid rgba(56,189,248,.25)}
 .s403{background:rgba(255,140,0,.12);color:var(--orange);border:1px solid rgba(255,140,0,.25)}
 .s404{background:rgba(74,85,104,.1);color:var(--muted);border:1px solid rgba(74,85,104,.2)}
 .s5xx{background:rgba(255,69,96,.12);color:var(--red);border:1px solid rgba(255,69,96,.25)}
-.s-null{background:rgba(74,85,104,.07);color:#334155;border:1px solid rgba(74,85,104,.12)}
-.tag-list{display:flex;gap:3px;flex-wrap:wrap;flex-shrink:0;max-width:160px}
-.tag{font-size:9px;font-family:var(--mono);padding:2px 5px;border-radius:3px;white-space:nowrap}
-.tag-js,.tag-json{background:rgba(255,214,10,.1);color:var(--yellow);border:1px solid rgba(255,214,10,.2)}
-.tag-api{background:rgba(56,189,248,.1);color:var(--blue);border:1px solid rgba(56,189,248,.2)}
-.tag-admin,.tag-sensitive{background:rgba(255,69,96,.1);color:var(--red);border:1px solid rgba(255,69,96,.2)}
-.tag-auth{background:rgba(255,140,0,.1);color:var(--orange);border:1px solid rgba(255,140,0,.2)}
-.tag-params,.tag-interesting-params{background:rgba(0,255,136,.1);color:var(--accent);border:1px solid rgba(0,255,136,.2)}
-.tag-default{background:rgba(163,113,247,.1);color:var(--purple);border:1px solid rgba(163,113,247,.2)}
-.url-link{font-family:var(--mono);font-size:11px;word-break:break-all;flex:1;color:#6b8aaa;text-decoration:none;transition:color .15s}
-.url-link:hover{color:var(--accent)}
-.copy-url{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:3px;padding:2px 7px;font-size:10px;font-family:var(--mono);cursor:pointer;flex-shrink:0;transition:all .15s;white-space:nowrap}
-.copy-url:hover{border-color:var(--accent);color:var(--accent)}
+.snull{background:rgba(74,85,104,.07);color:#334155;border:1px solid rgba(74,85,104,.1)}
+.tags{display:flex;gap:3px;flex-shrink:0;max-width:150px;flex-wrap:wrap}
+.tag{font-size:9px;font-family:var(--mono);padding:2px 5px;border-radius:3px}
+.tjs,.tjson{background:rgba(255,214,10,.1);color:var(--yellow);border:1px solid rgba(255,214,10,.2)}
+.tapi{background:rgba(56,189,248,.1);color:var(--blue);border:1px solid rgba(56,189,248,.2)}
+.tadmin,.tsensitive{background:rgba(255,69,96,.1);color:var(--red);border:1px solid rgba(255,69,96,.2)}
+.tauth{background:rgba(255,140,0,.1);color:var(--orange);border:1px solid rgba(255,140,0,.2)}
+.tparams{background:rgba(0,255,136,.1);color:var(--accent);border:1px solid rgba(0,255,136,.2)}
+.tdefault{background:rgba(163,113,247,.1);color:var(--purple);border:1px solid rgba(163,113,247,.2)}
+.ulink{font-family:var(--mono);font-size:11px;word-break:break-all;flex:1;color:#6b8aaa;text-decoration:none;transition:color .15s}
+.ulink:hover{color:var(--accent)}
+.cbtn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:3px;padding:2px 7px;font-size:10px;font-family:var(--mono);cursor:pointer;flex-shrink:0;transition:all .15s}
+.cbtn:hover{border-color:var(--accent);color:var(--accent)}
 
-/* secrets list */
-.secret-card{background:var(--card);border:1px solid var(--border);border-radius:9px;margin-bottom:10px;overflow:hidden}
-.secret-card.sev-critical{border-left:3px solid var(--red)}
-.secret-card.sev-high{border-left:3px solid var(--orange)}
-.secret-card.sev-medium{border-left:3px solid var(--yellow)}
-.secret-card.sev-low{border-left:3px solid var(--blue)}
-.secret-card.sev-info{border-left:3px solid var(--muted)}
-.sc-head{padding:11px 14px;display:flex;align-items:center;gap:9px;cursor:pointer}
-.sc-head:hover{background:rgba(255,255,255,.02)}
-.sev-pill{font-size:9px;font-family:var(--mono);font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:4px;flex-shrink:0}
-.sp-critical{background:rgba(255,69,96,.15);color:var(--red);border:1px solid rgba(255,69,96,.3)}
-.sp-high{background:rgba(255,140,0,.15);color:var(--orange);border:1px solid rgba(255,140,0,.3)}
-.sp-medium{background:rgba(255,214,10,.1);color:var(--yellow);border:1px solid rgba(255,214,10,.25)}
-.sp-low{background:rgba(56,189,248,.1);color:var(--blue);border:1px solid rgba(56,189,248,.25)}
-.sp-info{background:rgba(74,85,104,.15);color:var(--muted);border:1px solid rgba(74,85,104,.3)}
-.sc-type{font-size:13px;font-weight:600;flex:1}
-.sc-src{font-family:var(--mono);font-size:10px;color:var(--muted);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sc-toggle{color:var(--muted);font-size:11px;transition:transform .2s}
-.secret-card.open .sc-toggle{transform:rotate(180deg)}
-.sc-body{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
-.secret-card.open .sc-body{display:block}
-.match-val{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--accent);word-break:break-all;white-space:pre-wrap}
-.meta-grid{display:grid;grid-template-columns:80px 1fr;gap:4px 10px;margin-top:10px;font-size:11px}
+/* secrets */
+.secret-card{background:var(--card);border:1px solid var(--border);border-radius:9px;margin-bottom:9px;overflow:hidden}
+.secret-card.sc-critical{border-left:3px solid var(--red)}
+.secret-card.sc-high{border-left:3px solid var(--orange)}
+.secret-card.sc-medium{border-left:3px solid var(--yellow)}
+.secret-card.sc-low{border-left:3px solid var(--blue)}
+.secret-card.sc-info{border-left:3px solid var(--muted)}
+.sch{padding:11px 14px;display:flex;align-items:center;gap:9px;cursor:pointer}
+.sch:hover{background:rgba(255,255,255,.02)}
+.spill{font-size:9px;font-family:var(--mono);font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:4px;flex-shrink:0}
+.pc{background:rgba(255,69,96,.15);color:var(--red);border:1px solid rgba(255,69,96,.3)}
+.ph{background:rgba(255,140,0,.15);color:var(--orange);border:1px solid rgba(255,140,0,.3)}
+.pm{background:rgba(255,214,10,.1);color:var(--yellow);border:1px solid rgba(255,214,10,.25)}
+.pl{background:rgba(56,189,248,.1);color:var(--blue);border:1px solid rgba(56,189,248,.25)}
+.pi{background:rgba(74,85,104,.15);color:var(--muted);border:1px solid rgba(74,85,104,.3)}
+.stype{font-size:13px;font-weight:600;flex:1}
+.ssrc{font-family:var(--mono);font-size:10px;color:var(--muted);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stoggle{color:var(--muted);font-size:11px;transition:transform .2s}
+.secret-card.open .stoggle{transform:rotate(180deg)}
+.scb{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
+.secret-card.open .scb{display:block}
+.mval{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--accent);word-break:break-all}
+.mgrid{display:grid;grid-template-columns:80px 1fr;gap:4px 10px;margin-top:10px;font-size:11px}
 .mk{color:var(--muted);font-family:var(--mono)}
 .mv{font-family:var(--mono);word-break:break-all}
-.src-link{color:var(--blue);text-decoration:none;font-family:var(--mono);font-size:11px}
-.src-link:hover{color:var(--accent);text-decoration:underline}
+.alink{color:var(--blue);text-decoration:none;font-family:var(--mono);font-size:11px}
+.alink:hover{color:var(--accent);text-decoration:underline}
 
-/* more btn */
 .more-btn{width:100%;background:transparent;border:1px dashed var(--border);color:var(--muted);border-radius:7px;padding:10px;font-size:12px;cursor:pointer;font-family:var(--ui);transition:all .15s;margin-top:8px}
 .more-btn:hover{border-color:var(--accent);color:var(--accent)}
-
-/* empty */
 .empty{text-align:center;padding:48px 20px;color:var(--muted)}
 .empty-icon{font-size:40px;opacity:.35;margin-bottom:12px}
 .empty-title{font-size:14px;font-weight:600;color:#64748b}
-.empty-sub{font-size:12px;margin-top:6px;line-height:1.6}
 
-@media(max-width:580px){
-  .input-row{flex-direction:column}
-  select,.btn-scan{width:100%}
-  .summary-grid{grid-template-columns:repeat(3,1fr)}
-  .tag-list{display:none}
-}
+@media(max-width:580px){.input-row{flex-direction:column}select,.btn-scan{width:100%}.summary-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
 
 <div class="hero">
-  <div class="eyebrow"><span class="dot-live"></span> Web Archive Recon v2</div>
+  <div class="eyebrow"><span class="dot"></span> Web Archive Recon</div>
   <h1>Wayback <em>Recon</em></h1>
-  <p class="hero-sub">بيجيب كل الروابط من Wayback Machine، يفحص الـ status codes، يسكان الـ JS files عن secrets، ويصنف كل حاجة تلقائي.</p>
+  <p class="hero-sub">بيجيب كل الروابط من Wayback Machine، يفحص الـ status codes، يسكان الـ JS files عن secrets، ويصنف كل حاجة.</p>
 </div>
 
 <div class="panel">
@@ -172,333 +153,348 @@ select option{background:var(--surface)}
       <input type="text" id="domain" placeholder="target.com" />
       <select id="limit">
         <option value="500">500 URLs</option>
-        <option value="1000">1000 URLs</option>
-        <option value="2000" selected>2000 URLs</option>
-        <option value="5000">5000 URLs</option>
+        <option value="1000" selected>1000 URLs</option>
+        <option value="2000">2000 URLs</option>
       </select>
       <button class="btn-scan" id="scan-btn" onclick="startScan()">⚡ Scan</button>
-    </div>
-    <div class="options-row">
-      <label class="checkbox-lbl">
-        <input type="checkbox" id="opt-secrets" checked />
-        Scan JS/JSON for secrets
-      </label>
     </div>
   </div>
 </div>
 
 <div class="prog-wrap" id="prog-wrap">
   <div class="prog-card">
-    <div class="prog-top">
-      <div class="prog-label" id="prog-label">// Fetching from Web Archive...</div>
-      <div class="prog-count" id="prog-count">—</div>
+    <div class="steps">
+      <div class="step" id="step-0"><div class="step-dot">1</div><div class="step-lbl">Fetch URLs</div></div>
+      <div class="step" id="step-1"><div class="step-dot">2</div><div class="step-lbl">Check Status</div></div>
+      <div class="step" id="step-2"><div class="step-dot">3</div><div class="step-lbl">Scan Secrets</div></div>
+      <div class="step" id="step-3"><div class="step-dot">✓</div><div class="step-lbl">Done</div></div>
     </div>
     <div class="track"><div class="fill" id="fill"></div></div>
-    <div class="prog-status" id="prog-status">Connecting to Wayback Machine...</div>
+    <div class="prog-status" id="prog-status">Starting...</div>
   </div>
 </div>
 
 <div class="results" id="results"></div>
 
 <script>
-let scanData = null;
-let activeSection = 'alive';
-let searchQ = '';
-let showLimit = 200;
+var scanData = null;
+var activeSection = 'alive';
+var searchQ = '';
+var showLimit = 200;
 
-const SECTIONS = [
-  // status
-  { id:'alive',              label:'✅ Alive 200',      color:'var(--accent)',  type:'bucket' },
-  { id:'redirect',           label:'↪ Redirects',       color:'var(--blue)',    type:'bucket' },
-  { id:'forbidden',          label:'🔒 403',            color:'var(--orange)',  type:'bucket' },
-  { id:'server_error',       label:'💥 5xx',            color:'var(--red)',     type:'bucket' },
-  { id:'not_found',          label:'404',               color:'var(--muted)',   type:'bucket' },
-  { id:'unchecked',          label:'⬜ Unchecked',      color:'#334155',        type:'bucket' },
-  // special
-  { id:'js',                 label:'📜 JS Files',       color:'var(--yellow)',  type:'special' },
-  { id:'json',               label:'{ } JSON',          color:'var(--yellow)',  type:'special' },
-  { id:'api_endpoints',      label:'🔌 API',            color:'var(--blue)',    type:'special' },
-  { id:'with_params',        label:'? Params',          color:'var(--accent)',  type:'special' },
-  { id:'interesting_params', label:'🎯 Juicy Params',   color:'#00ffaa',        type:'special' },
-  { id:'admin_panels',       label:'🚨 Admin',          color:'var(--red)',     type:'special' },
-  { id:'auth_endpoints',     label:'🔑 Auth',           color:'var(--orange)',  type:'special' },
-  { id:'file_uploads',       label:'📤 Uploads',        color:'var(--orange)',  type:'special' },
-  { id:'graphql',            label:'⬡ GraphQL',         color:'var(--purple)',  type:'special' },
-  { id:'swagger_docs',       label:'📖 Swagger',        color:'var(--blue)',    type:'special' },
-  { id:'sensitive_files',    label:'⚠️ Sensitive',      color:'var(--red)',     type:'special' },
-  { id:'debug_endpoints',    label:'🐛 Debug',          color:'var(--orange)',  type:'special' },
-  { id:'webhooks',           label:'🪝 Webhooks',       color:'var(--purple)',  type:'special' },
-  { id:'backend_files',      label:'⚙️ Backend',        color:'var(--orange)',  type:'special' },
-  // secrets
-  { id:'secrets',            label:'🔐 Secrets',        color:'var(--red)',     type:'secrets' },
+var SECTIONS = [
+  {id:'alive',        label:'✅ Alive 200',    color:'var(--accent)', type:'bucket'},
+  {id:'redirect',     label:'↪ Redirects',     color:'var(--blue)',   type:'bucket'},
+  {id:'forbidden',    label:'🔒 403',          color:'var(--orange)', type:'bucket'},
+  {id:'server_error', label:'💥 5xx',          color:'var(--red)',    type:'bucket'},
+  {id:'not_found',    label:'404',             color:'var(--muted)',  type:'bucket'},
+  {id:'unchecked',    label:'⬜ Unchecked',    color:'#334155',       type:'bucket'},
+  {id:'js',                 label:'📜 JS Files',      color:'var(--yellow)', type:'special'},
+  {id:'json',               label:'{ } JSON',         color:'var(--yellow)', type:'special'},
+  {id:'api_endpoints',      label:'🔌 API',           color:'var(--blue)',   type:'special'},
+  {id:'with_params',        label:'? Params',         color:'var(--accent)', type:'special'},
+  {id:'interesting_params', label:'🎯 Juicy Params',  color:'#00ffaa',       type:'special'},
+  {id:'admin_panels',       label:'🚨 Admin',         color:'var(--red)',    type:'special'},
+  {id:'auth_endpoints',     label:'🔑 Auth',          color:'var(--orange)', type:'special'},
+  {id:'sensitive_files',    label:'⚠️ Sensitive',     color:'var(--red)',    type:'special'},
+  {id:'swagger_docs',       label:'📖 Swagger',       color:'var(--blue)',   type:'special'},
+  {id:'graphql',            label:'⬡ GraphQL',        color:'var(--purple)', type:'special'},
+  {id:'debug_endpoints',    label:'🐛 Debug',         color:'var(--orange)', type:'special'},
+  {id:'webhooks',           label:'🪝 Webhooks',      color:'var(--purple)', type:'special'},
+  {id:'backend_files',      label:'⚙️ Backend',       color:'var(--orange)', type:'special'},
+  {id:'secrets',            label:'🔐 Secrets',       color:'var(--red)',    type:'secrets'},
 ];
 
-const steps = [
-  { pct:5,  msg:'Connecting to Wayback Machine CDX API...' },
-  { pct:18, msg:'Fetching archived URLs (200 status filter)...' },
-  { pct:32, msg:'Fetching JS/JSON specific URLs from archive...' },
-  { pct:45, msg:'Querying subdomains from Wayback...' },
-  { pct:58, msg:'Fetching from Common Crawl index...' },
-  { pct:68, msg:'Running HEAD status checks...' },
-  { pct:80, msg:'Scanning JS files for secrets and sensitive data...' },
-  { pct:92, msg:'Classifying and building categories...' },
-];
+function setStep(n) {
+  for (var i = 0; i < 4; i++) {
+    var el = document.getElementById('step-'+i);
+    el.className = 'step' + (i < n ? ' done' : i === n ? ' active' : '');
+  }
+  document.getElementById('fill').style.width = (n/3*100) + '%';
+}
+
+function setStatus(msg) { document.getElementById('prog-status').textContent = msg; }
+
+async function apiCall(payload) {
+  var r = await fetch('/api/wayback', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!r.ok) { var e = await r.json(); throw new Error(e.error || 'Error ' + r.status); }
+  return r.json();
+}
 
 async function startScan() {
-  const domain = document.getElementById('domain').value.trim().replace(/^https?:\/\//,'').replace(/\/.*/,'').replace(/^www\./,'');
+  var domain = document.getElementById('domain').value.trim().replace(/^https?:\/\//,'').replace(/\/.*/,'').replace(/^www\./,'');
   if (!domain) { alert('أدخلي الـ domain'); return; }
 
   scanData = null; activeSection = 'alive'; searchQ = ''; showLimit = 200;
   document.getElementById('results').innerHTML = '';
   document.getElementById('prog-wrap').style.display = 'block';
   document.getElementById('scan-btn').disabled = true;
-  document.getElementById('fill').style.width = '0%';
 
-  const limit = parseInt(document.getElementById('limit').value);
-  const scanSecrets = document.getElementById('opt-secrets').checked;
-  document.getElementById('prog-count').textContent = `limit: ${limit}`;
-
-  let stepIdx = 0;
-  const stepTimer = setInterval(() => {
-    if (stepIdx < steps.length) {
-      const s = steps[stepIdx++];
-      document.getElementById('fill').style.width = s.pct + '%';
-      document.getElementById('prog-status').textContent = s.msg;
-    }
-  }, 2800);
+  var limit = parseInt(document.getElementById('limit').value);
 
   try {
-    const r = await fetch('/api/wayback', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ domain, limit, scan_secrets: scanSecrets }),
-    });
-    clearInterval(stepTimer);
-    if (!r.ok) { const e = await r.json(); throw new Error(e.error || 'Server error'); }
-    scanData = await r.json();
+    // STEP 1: Fetch URLs
+    setStep(0); setStatus('Fetching URLs from Wayback Machine...');
+    var fetchRes = await apiCall({ action:'fetch', domain:domain, limit:limit });
+    var allUrls = fetchRes.urls || [];
+    setStatus('Got ' + allUrls.length + ' URLs — checking status...');
 
-    document.getElementById('fill').style.width = '100%';
-    document.getElementById('prog-label').textContent = '// Scan complete ✅';
-    document.getElementById('prog-count').textContent = `${scanData.total_found} URLs · ${scanData.secrets_found} secrets`;
-    document.getElementById('prog-status').textContent =
-      `✅ ${scanData.total_found} URLs fetched · ${scanData.total_checked} status-checked · ${scanData.secrets_found} secrets found`;
+    // STEP 2: Status check in batches of 50
+    setStep(1);
+    var statusMap = {};
+    var checkable = allUrls.slice(0, 100);
+    var batches = [];
+    for (var i = 0; i < checkable.length; i += 50) {
+      batches.push(checkable.slice(i, i+50).map(function(r){return r.url;}));
+    }
+    for (var b = 0; b < batches.length; b++) {
+      setStatus('Checking status: batch ' + (b+1) + '/' + batches.length + '...');
+      try {
+        var cr = await apiCall({ action:'check', domain:domain, urls:batches[b] });
+        (cr.results||[]).forEach(function(r){ statusMap[r.url] = r.status; });
+      } catch(e) {}
+    }
+    allUrls.forEach(function(r){ if(statusMap[r.url]) r.status = statusMap[r.url]; });
+
+    // STEP 3: Secret scan
+    setStep(2); setStatus('Scanning JS files for secrets...');
+    var jsUrls = allUrls.filter(function(r){return r.tags.includes('js')||r.tags.includes('json')||r.tags.includes('env');}).slice(0,15).map(function(r){return r.url;});
+    var secrets = [];
+    try {
+      var sr = await apiCall({ action:'scan', domain:domain, urls:jsUrls });
+      secrets = sr.secrets || [];
+    } catch(e) {}
+
+    // Build result
+    setStep(3); setStatus('✅ Done — ' + allUrls.length + ' URLs · ' + secrets.length + ' secrets');
+
+    function filterBy(fn){ return allUrls.filter(fn); }
+    var inc = function(r,t){ return r.tags.includes(t); };
+
+    scanData = {
+      domain: domain,
+      total_found: allUrls.length,
+      secrets_found: secrets.length,
+      buckets: {
+        alive:        filterBy(function(r){return r.status===200;}),
+        redirect:     filterBy(function(r){return [301,302,303,307,308].includes(r.status);}),
+        forbidden:    filterBy(function(r){return r.status===403;}),
+        server_error: filterBy(function(r){return r.status>=500;}),
+        not_found:    filterBy(function(r){return r.status===404;}),
+        unchecked:    filterBy(function(r){return !r.status||r.status<=0;}),
+      },
+      special: {
+        js:                 filterBy(function(r){return inc(r,'js');}),
+        json:               filterBy(function(r){return inc(r,'json');}),
+        api_endpoints:      filterBy(function(r){return inc(r,'api');}),
+        with_params:        filterBy(function(r){return inc(r,'params');}),
+        interesting_params: filterBy(function(r){return inc(r,'interesting-params');}),
+        admin_panels:       filterBy(function(r){return inc(r,'admin');}),
+        auth_endpoints:     filterBy(function(r){return inc(r,'auth');}),
+        sensitive_files:    filterBy(function(r){return r.tags.some(function(t){return['env','git','database','log','backup','config','archive'].includes(t);});}),
+        swagger_docs:       filterBy(function(r){return inc(r,'swagger');}),
+        graphql:            filterBy(function(r){return inc(r,'graphql');}),
+        debug_endpoints:    filterBy(function(r){return inc(r,'debug');}),
+        webhooks:           filterBy(function(r){return inc(r,'webhook');}),
+        backend_files:      filterBy(function(r){return inc(r,'backend');}),
+      },
+      secrets: secrets,
+    };
 
     renderResults();
   } catch(e) {
-    clearInterval(stepTimer);
-    document.getElementById('prog-status').textContent = '⚠ Error: ' + e.message;
-    document.getElementById('prog-label').textContent = '// Error';
+    setStatus('⚠ Error: ' + e.message);
+    document.getElementById('fill').style.width='0';
   }
   document.getElementById('scan-btn').disabled = false;
 }
 
-function getList(section) {
+function getList(id) {
   if (!scanData) return [];
-  if (section === 'secrets') return scanData.secrets || [];
-  const s = SECTIONS.find(x => x.id === section);
+  if (id === 'secrets') return scanData.secrets||[];
+  var s = SECTIONS.find(function(x){return x.id===id;});
   if (!s) return [];
-  if (s.type === 'bucket') return scanData.buckets[section] || [];
-  if (s.type === 'special') return scanData.special[section] || [];
-  return [];
+  if (s.type==='bucket') return scanData.buckets[id]||[];
+  return scanData.special[id]||[];
 }
 
-function statusClass(st) {
-  if (st === 200) return 's200';
+function sBadge(st) {
+  if (st===200) return 's200';
   if ([301,302,303,307,308].includes(st)) return 's3xx';
-  if (st === 403) return 's403';
-  if (st === 404) return 's404';
-  if (st >= 500) return 's5xx';
-  return 's-null';
+  if (st===403) return 's403';
+  if (st===404) return 's404';
+  if (st>=500)  return 's5xx';
+  return 'snull';
 }
 
-function tagClass(t) {
-  if (['js','json'].includes(t)) return 'tag tag-js';
-  if (t === 'api') return 'tag tag-api';
-  if (['admin','sensitive'].includes(t)) return 'tag tag-admin';
-  if (t === 'auth') return 'tag tag-auth';
-  if (['params','interesting-params'].includes(t)) return 'tag tag-params';
-  return 'tag tag-default';
+function tagCls(t) {
+  if (t==='js'||t==='json') return 'tag tjs';
+  if (t==='api') return 'tag tapi';
+  if (t==='admin'||t==='sensitive') return 'tag tadmin';
+  if (t==='auth') return 'tag tauth';
+  if (t==='params'||t==='interesting-params') return 'tag tparams';
+  return 'tag tdefault';
+}
+
+function pillCls(sev) {
+  return 'spill '+ ({critical:'pc',high:'ph',medium:'pm',low:'pl',info:'pi'}[sev]||'pi');
 }
 
 function renderResults() {
   if (!scanData) return;
-  const b = scanData.buckets, sp = scanData.special, sec = scanData.secrets || [];
+  var sec = scanData.secrets||[];
 
-  let html = `<div class="summary-grid">`;
-  SECTIONS.forEach(s => {
-    const list = getList(s.id);
-    html += `<div class="sum-card ${activeSection===s.id?'active':''}" onclick="setSection('${s.id}')">
-      <div class="num" style="color:${s.color}">${list.length}</div>
-      <div class="lbl">${s.label}</div>
-    </div>`;
+  var html = '<div class="summary-grid">';
+  SECTIONS.forEach(function(s) {
+    var n = getList(s.id).length;
+    html += '<div class="sum-card'+(activeSection===s.id?' active':'')+'" onclick="setSection(\''+s.id+'\')">'
+      +'<div class="num" style="color:'+s.color+'">'+n+'</div>'
+      +'<div class="lbl">'+s.label+'</div></div>';
   });
-  html += `</div>`;
+  html += '</div>';
 
-  // secrets alert
-  if (sec.length > 0 && activeSection !== 'secrets') {
-    html += `<div class="secrets-alert" onclick="setSection('secrets')">
-      <div class="icon">🔐</div>
-      <div>
-        <div class="txt">⚠ ${sec.length} Secret${sec.length>1?'s':''} Found!</div>
-        <div class="sub">Click to view API keys, tokens, and credentials found in JS/source code</div>
-      </div>
-    </div>`;
+  if (sec.length && activeSection!=='secrets') {
+    html += '<div class="secrets-alert" onclick="setSection(\'secrets\')">'
+      +'<div style="font-size:20px">🔐</div>'
+      +'<div><div class="stxt">⚠ '+sec.length+' Secret'+(sec.length>1?'s':'')+' Found!</div>'
+      +'<div class="ssub">Click to view credentials found in JS/source files</div></div></div>';
   }
 
-  // export
-  html += `<div class="export-row">
-    <button class="exp-btn" onclick="exportTxt()">⬇ TXT (section)</button>
-    <button class="exp-btn" onclick="exportAllTxt()">⬇ TXT (all)</button>
-    <button class="exp-btn" onclick="exportJSON()">⬇ JSON (full)</button>
-    <button class="exp-btn" onclick="copySection()">📋 Copy</button>
-  </div>`;
+  html += '<div class="export-row">'
+    +'<button class="exp-btn" onclick="exportTxt()">⬇ TXT (section)</button>'
+    +'<button class="exp-btn" onclick="exportAll()">⬇ TXT (all)</button>'
+    +'<button class="exp-btn" onclick="exportJSON()">⬇ JSON</button>'
+    +'<button class="exp-btn" onclick="copySection()">📋 Copy</button>'
+    +'</div>';
 
-  const curSection = SECTIONS.find(s => s.id === activeSection);
-  const list = getList(activeSection);
-  const filtered = activeSection === 'secrets'
-    ? list.filter(r => !searchQ || r.type.toLowerCase().includes(searchQ.toLowerCase()) || r.match.toLowerCase().includes(searchQ.toLowerCase()) || r.source.toLowerCase().includes(searchQ.toLowerCase()))
-    : list.filter(r => !searchQ || r.url.toLowerCase().includes(searchQ.toLowerCase()));
+  var cur = SECTIONS.find(function(s){return s.id===activeSection;});
+  var list = getList(activeSection);
+  var filtered = activeSection==='secrets'
+    ? list.filter(function(r){return !searchQ||r.type.toLowerCase().includes(searchQ.toLowerCase())||r.match.toLowerCase().includes(searchQ.toLowerCase())||r.source.toLowerCase().includes(searchQ.toLowerCase());})
+    : list.filter(function(r){return !searchQ||r.url.toLowerCase().includes(searchQ.toLowerCase());});
 
-  html += `<div class="sec-title" style="color:${curSection?.color||'var(--text)'}">
-    ${curSection?.label||activeSection}
-    <span style="font-size:11px;color:var(--muted);font-weight:400;font-family:var(--mono)">${list.length} total</span>
-  </div>`;
+  html += '<div class="sec-title" style="color:'+(cur?cur.color:'var(--text)')+'">'+( cur?cur.label:activeSection)
+    +'<span style="font-size:11px;color:var(--muted);font-weight:400;font-family:var(--mono)">'+list.length+' total</span></div>';
 
-  html += `<div class="search-bar">
-    <input placeholder="Filter..." oninput="doSearch(this.value)" value="${esc(searchQ)}" />
-    <span class="result-count">${filtered.length} results</span>
-  </div>`;
+  html += '<div class="search-bar"><input placeholder="Filter..." oninput="doSearch(this.value)" value="'+esc(searchQ)+'" />'
+    +'<span class="res-count">'+filtered.length+' results</span></div>';
 
-  if (activeSection === 'secrets') {
-    // SECRETS VIEW
+  if (activeSection==='secrets') {
     if (!filtered.length) {
-      html += `<div class="empty"><div class="empty-icon">✅</div><div class="empty-title">No secrets found</div><div class="empty-sub">JS files were scanned but no sensitive data was detected.</div></div>`;
+      html += '<div class="empty"><div class="empty-icon">✅</div><div class="empty-title">No secrets found</div></div>';
     } else {
-      const sevOrder = {critical:0,high:1,medium:2,low:3,info:4};
-      const sorted = [...filtered].sort((a,b) => (sevOrder[a.severity]||4)-(sevOrder[b.severity]||4));
-      sorted.slice(0, showLimit).forEach((f, i) => {
-        html += `<div class="secret-card sev-${f.severity}" id="sc-${i}">
-          <div class="sc-head" onclick="toggleSecret(${i})">
-            <span class="sev-pill sp-${f.severity}">${f.severity}</span>
-            <span class="sc-type">${esc(f.type)}</span>
-            <a class="src-link" href="${esc(f.source)}" target="_blank" rel="noopener" onclick="e=>e.stopPropagation()" title="${esc(f.source)}">${esc(new URL(f.source).pathname.slice(-40)||f.source)}</a>
-            <span class="sc-toggle">▼</span>
-          </div>
-          <div class="sc-body">
-            <div class="match-val">${esc(f.match)}</div>
-            <div class="meta-grid">
-              <span class="mk">Type</span><span class="mv">${esc(f.type)}</span>
-              <span class="mk">Severity</span><span class="mv" style="color:var(--red)">${f.severity.toUpperCase()}</span>
-              <span class="mk">Source</span><span class="mv"><a class="src-link" href="${esc(f.source)}" target="_blank" rel="noopener">${esc(f.source)}</a></span>
-              <span class="mk">Length</span><span class="mv">${f.match.length} chars</span>
-            </div>
-          </div>
-        </div>`;
+      filtered.slice(0,showLimit).forEach(function(f,i) {
+        var srcShort = '';
+        try { srcShort = new URL(f.source).pathname.slice(-45)||f.source; } catch(e){srcShort=f.source;}
+        html += '<div class="secret-card sc-'+f.severity+'" id="sc-'+i+'">'
+          +'<div class="sch" onclick="toggleSec('+i+')">'
+          +'<span class="'+pillCls(f.severity)+'">'+f.severity+'</span>'
+          +'<span class="stype">'+esc(f.type)+'</span>'
+          +'<a class="alink ssrc" href="'+esc(f.source)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="'+esc(f.source)+'">'+esc(srcShort)+'</a>'
+          +'<span class="stoggle">▼</span></div>'
+          +'<div class="scb">'
+          +'<div class="mval">'+esc(f.match)+'</div>'
+          +'<div class="mgrid">'
+          +'<span class="mk">Type</span><span class="mv">'+esc(f.type)+'</span>'
+          +'<span class="mk">Severity</span><span class="mv" style="color:var(--red)">'+f.severity.toUpperCase()+'</span>'
+          +'<span class="mk">Source</span><span class="mv"><a class="alink" href="'+esc(f.source)+'" target="_blank" rel="noopener">'+esc(f.source)+'</a></span>'
+          +'</div></div></div>';
       });
     }
   } else {
-    // URL VIEW
     if (!filtered.length) {
-      html += `<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No URLs in this category</div></div>`;
+      html += '<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No URLs in this category</div></div>';
     } else {
-      html += `<div class="url-list">`;
-      filtered.slice(0, showLimit).forEach(r => {
-        const st = r.status;
-        const sc = statusClass(st);
-        const stLabel = st && st > 0 ? st : '—';
-        const tags = (r.tags||[]).slice(0,3);
-        html += `<div class="url-row-item">
-          <span class="status-badge ${sc}">${stLabel}</span>
-          <div class="tag-list">${tags.map(t=>`<span class="${tagClass(t)}">${t}</span>`).join('')}</div>
-          <a class="url-link" href="${esc(r.url)}" target="_blank" rel="noopener" title="${esc(r.url)}">${esc(r.url)}</a>
-          <button class="copy-url" onclick="cpUrl(event,'${esc(r.url)}')">copy</button>
-        </div>`;
+      html += '<div class="url-list">';
+      filtered.slice(0,showLimit).forEach(function(r) {
+        var sc = sBadge(r.status);
+        var stL = r.status&&r.status>0?r.status:'—';
+        var tags = (r.tags||[]).slice(0,3).map(function(t){return '<span class="'+tagCls(t)+'">'+t+'</span>';}).join('');
+        html += '<div class="url-item">'
+          +'<span class="sbadge '+sc+'">'+stL+'</span>'
+          +'<div class="tags">'+tags+'</div>'
+          +'<a class="ulink" href="'+esc(r.url)+'" target="_blank" rel="noopener" title="'+esc(r.url)+'">'+esc(r.url)+'</a>'
+          +'<button class="cbtn" onclick="cpUrl(event,\''+esc(r.url)+'\')">copy</button>'
+          +'</div>';
       });
-      html += `</div>`;
+      html += '</div>';
     }
   }
 
   if (filtered.length > showLimit) {
-    html += `<button class="more-btn" onclick="loadMore()">Load more (${filtered.length - showLimit} remaining)</button>`;
+    html += '<button class="more-btn" onclick="loadMore()">Load more ('+(filtered.length-showLimit)+' remaining)</button>';
   }
 
   document.getElementById('results').innerHTML = html;
 }
 
-function toggleSecret(i) {
-  document.getElementById('sc-'+i)?.classList.toggle('open');
-}
+function toggleSec(i){ document.getElementById('sc-'+i).classList.toggle('open'); }
+function setSection(s){ activeSection=s; searchQ=''; showLimit=200; renderResults(); }
+function doSearch(q){ searchQ=q; showLimit=200; renderResults(); }
+function loadMore(){ showLimit+=200; renderResults(); }
 
-function setSection(s) { activeSection = s; searchQ = ''; showLimit = 200; renderResults(); }
-function doSearch(q) { searchQ = q; showLimit = 200; renderResults(); }
-function loadMore() { showLimit += 200; renderResults(); }
-
-function cpUrl(e, url) {
+function cpUrl(e,url){
   e.preventDefault(); e.stopPropagation();
-  navigator.clipboard.writeText(url).then(() => {
-    e.target.textContent = '✓'; setTimeout(() => e.target.textContent = 'copy', 1200);
+  navigator.clipboard.writeText(url).then(function(){
+    e.target.textContent='✓'; setTimeout(function(){e.target.textContent='copy';},1200);
   });
 }
 
-function exportTxt() {
-  if (!scanData) return;
-  const list = activeSection === 'secrets'
-    ? getList('secrets').map(s => `[${s.severity.toUpperCase()}] ${s.type}\nMatch: ${s.match}\nSource: ${s.source}\n`).join('\n')
-    : getList(activeSection).map(r => r.url).join('\n');
-  dl(`${scanData.domain}-${activeSection}.txt`, list, 'text/plain');
+function exportTxt(){
+  if(!scanData) return;
+  var list = activeSection==='secrets'
+    ? getList('secrets').map(function(s){return '['+s.severity.toUpperCase()+'] '+s.type+'\nMatch: '+s.match+'\nSource: '+s.source+'\n';}).join('\n')
+    : getList(activeSection).map(function(r){return r.url;}).join('\n');
+  dl(scanData.domain+'-'+activeSection+'.txt', list, 'text/plain');
 }
 
-function exportAllTxt() {
-  if (!scanData) return;
-  const b = scanData.buckets, sp = scanData.special;
-  let txt = `# Wayback Recon — ${scanData.domain}\n# Date: ${new Date().toISOString().slice(0,10)}\n# Total: ${scanData.total_found} URLs · ${scanData.secrets_found} secrets\n\n`;
-  const sections = [
-    ['ALIVE (200)', b.alive], ['REDIRECTS', b.redirect], ['FORBIDDEN (403)', b.forbidden],
-    ['SERVER ERRORS 5xx', b.server_error], ['JS FILES', sp.js], ['JSON FILES', sp.json],
-    ['API ENDPOINTS', sp.api_endpoints], ['WITH PARAMS', sp.with_params],
-    ['JUICY PARAMS', sp.interesting_params], ['ADMIN PANELS', sp.admin_panels],
-    ['AUTH ENDPOINTS', sp.auth_endpoints], ['SENSITIVE FILES', sp.sensitive_files],
-    ['SWAGGER/DOCS', sp.swagger_docs], ['GRAPHQL', sp.graphql],
-  ];
-  sections.forEach(([name, list]) => {
-    if (list?.length) txt += `## ${name} (${list.length})\n${list.map(r=>r.url).join('\n')}\n\n`;
+function exportAll(){
+  if(!scanData) return;
+  var b=scanData.buckets, sp=scanData.special;
+  var txt='# Wayback Recon — '+scanData.domain+'\n# Date: '+new Date().toISOString().slice(0,10)+'\n# Total: '+scanData.total_found+' URLs\n\n';
+  [['ALIVE 200',b.alive],['REDIRECTS',b.redirect],['FORBIDDEN 403',b.forbidden],['SERVER ERRORS 5xx',b.server_error],
+   ['JS FILES',sp.js],['JSON FILES',sp.json],['API ENDPOINTS',sp.api_endpoints],['WITH PARAMS',sp.with_params],
+   ['JUICY PARAMS',sp.interesting_params],['ADMIN PANELS',sp.admin_panels],['SENSITIVE FILES',sp.sensitive_files],
+   ['AUTH ENDPOINTS',sp.auth_endpoints],['SWAGGER',sp.swagger_docs],['GRAPHQL',sp.graphql]
+  ].forEach(function(x){
+    if(x[1]&&x[1].length) txt+='## '+x[0]+' ('+x[1].length+')\n'+x[1].map(function(r){return r.url;}).join('\n')+'\n\n';
   });
-  if (scanData.secrets?.length) {
-    txt += `## SECRETS FOUND (${scanData.secrets.length})\n`;
-    scanData.secrets.forEach(s => {
-      txt += `[${s.severity.toUpperCase()}] ${s.type}\nMatch: ${s.match}\nSource: ${s.source}\n\n`;
-    });
+  if(scanData.secrets&&scanData.secrets.length){
+    txt+='## SECRETS ('+scanData.secrets.length+')\n';
+    scanData.secrets.forEach(function(s){txt+='['+s.severity.toUpperCase()+'] '+s.type+'\nMatch: '+s.match+'\nSource: '+s.source+'\n\n';});
   }
-  dl(`${scanData.domain}-full-recon.txt`, txt, 'text/plain');
+  dl(scanData.domain+'-full-recon.txt', txt, 'text/plain');
 }
 
-function exportJSON() {
-  if (!scanData) return;
-  dl(`${scanData.domain}-recon.json`, JSON.stringify(scanData, null, 2), 'application/json');
+function exportJSON(){
+  if(!scanData) return;
+  dl(scanData.domain+'-recon.json', JSON.stringify(scanData,null,2), 'application/json');
 }
 
-function copySection() {
-  if (!scanData) return;
-  const list = activeSection === 'secrets'
-    ? getList('secrets').map(s => `[${s.severity}] ${s.type}: ${s.match} (${s.source})`).join('\n')
-    : getList(activeSection).map(r => r.url).join('\n');
-  navigator.clipboard.writeText(list).then(() => alert(`Copied ${getList(activeSection).length} items`));
+function copySection(){
+  if(!scanData) return;
+  var list = activeSection==='secrets'
+    ? getList('secrets').map(function(s){return '['+s.severity+'] '+s.type+': '+s.match+' ('+s.source+')';}).join('\n')
+    : getList(activeSection).map(function(r){return r.url;}).join('\n');
+  navigator.clipboard.writeText(list).then(function(){alert('Copied '+getList(activeSection).length+' items');});
 }
 
-function dl(name, content, type) {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([content],{type}));
-  a.download = name; a.click();
+function dl(name,content,type){
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:type}));
+  a.download=name; a.click();
 }
 
-function esc(s) {
+function esc(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('domain').addEventListener('keydown', e => {
-    if (e.key === 'Enter') startScan();
-  });
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('domain').addEventListener('keydown',function(e){if(e.key==='Enter')startScan();});
 });
 </script>
 </body>
