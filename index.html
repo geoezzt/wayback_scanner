@@ -203,6 +203,7 @@ var SECTIONS = [
   {id:'webhooks',           label:'🪝 Webhooks',      color:'var(--purple)', type:'special'},
   {id:'backend_files',      label:'⚙️ Backend',       color:'var(--orange)', type:'special'},
   {id:'secrets',            label:'🔐 Secrets',       color:'var(--red)',    type:'secrets'},
+  {id:'pii',                label:'👤 PII Data',       color:'#f472b6',       type:'pii'},
 ];
 
 function setStep(n) {
@@ -313,9 +314,12 @@ async function startScan() {
   document.getElementById('scan-btn').disabled = false;
 }
 
+var PII_TYPES = ['Email Address','Phone Number (International)','Phone Number (Egypt/Arab)','Credit Card Number','National ID (Egypt)','Passport Number','Physical Address','Name Field','Username Hardcoded','IBAN','IPv4 Address','MAC Address'];
+
 function getList(id) {
   if (!scanData) return [];
-  if (id === 'secrets') return scanData.secrets||[];
+  if (id === 'secrets') return (scanData.secrets||[]).filter(function(s){ return !PII_TYPES.includes(s.type); });
+  if (id === 'pii')     return (scanData.secrets||[]).filter(function(s){ return PII_TYPES.includes(s.type); });
   var s = SECTIONS.find(function(x){return x.id===id;});
   if (!s) return [];
   if (s.type==='bucket') return scanData.buckets[id]||[];
@@ -358,10 +362,20 @@ function renderResults() {
   html += '</div>';
 
   if (sec.length && activeSection!=='secrets') {
-    html += '<div class="secrets-alert" onclick="setSection(\'secrets\')">'
-      +'<div style="font-size:20px">🔐</div>'
-      +'<div><div class="stxt">⚠ '+sec.length+' Secret'+(sec.length>1?'s':'')+' Found!</div>'
-      +'<div class="ssub">Click to view credentials found in JS/source files</div></div></div>';
+    var realSecrets = sec.filter(function(s){return !PII_TYPES.includes(s.type);});
+    var pii = sec.filter(function(s){return PII_TYPES.includes(s.type);});
+    if (realSecrets.length) {
+      html += '<div class="secrets-alert" onclick="setSection(\'secrets\')">'
+        +'<div style="font-size:20px">🔐</div>'
+        +'<div><div class="stxt">⚠ '+realSecrets.length+' Secret'+(realSecrets.length>1?'s':'')+' Found!</div>'
+        +'<div class="ssub">API keys, tokens, credentials found in JS/source files</div></div></div>';
+    }
+    if (pii.length && activeSection!=='pii') {
+      html += '<div class="secrets-alert" style="border-color:rgba(244,114,182,.3);background:rgba(244,114,182,.07)" onclick="setSection(\'pii\')">'
+        +'<div style="font-size:20px">👤</div>'
+        +'<div><div class="stxt" style="color:#f472b6">⚠ '+pii.length+' PII Record'+(pii.length>1?'s':'')+' Found!</div>'
+        +'<div class="ssub">Emails, phone numbers, names, addresses, IBANs</div></div></div>';
+    }
   }
 
   html += '<div class="export-row">'
@@ -373,7 +387,7 @@ function renderResults() {
 
   var cur = SECTIONS.find(function(s){return s.id===activeSection;});
   var list = getList(activeSection);
-  var filtered = activeSection==='secrets'
+  var filtered = (activeSection==='secrets'||activeSection==='pii')
     ? list.filter(function(r){return !searchQ||r.type.toLowerCase().includes(searchQ.toLowerCase())||r.match.toLowerCase().includes(searchQ.toLowerCase())||r.source.toLowerCase().includes(searchQ.toLowerCase());})
     : list.filter(function(r){return !searchQ||r.url.toLowerCase().includes(searchQ.toLowerCase());});
 
@@ -383,7 +397,7 @@ function renderResults() {
   html += '<div class="search-bar"><input placeholder="Filter..." oninput="doSearch(this.value)" value="'+esc(searchQ)+'" />'
     +'<span class="res-count">'+filtered.length+' results</span></div>';
 
-  if (activeSection==='secrets') {
+  if (activeSection==='secrets' || activeSection==='pii') {
     if (!filtered.length) {
       html += '<div class="empty"><div class="empty-icon">✅</div><div class="empty-title">No secrets found</div></div>';
     } else {
@@ -446,8 +460,9 @@ function cpUrl(e,url){
 
 function exportTxt(){
   if(!scanData) return;
-  var list = activeSection==='secrets'
-    ? getList('secrets').map(function(s){return '['+s.severity.toUpperCase()+'] '+s.type+'\nMatch: '+s.match+'\nSource: '+s.source+'\n';}).join('\n')
+  var isSec = activeSection==='secrets'||activeSection==='pii';
+  var list = isSec
+    ? getList(activeSection).map(function(s){return '['+s.severity.toUpperCase()+'] '+s.type+'\nMatch: '+s.match+'\nSource: '+s.source+'\n';}).join('\n')
     : getList(activeSection).map(function(r){return r.url;}).join('\n');
   dl(scanData.domain+'-'+activeSection+'.txt', list, 'text/plain');
 }
@@ -477,8 +492,9 @@ function exportJSON(){
 
 function copySection(){
   if(!scanData) return;
-  var list = activeSection==='secrets'
-    ? getList('secrets').map(function(s){return '['+s.severity+'] '+s.type+': '+s.match+' ('+s.source+')';}).join('\n')
+  var isSec = activeSection==='secrets'||activeSection==='pii';
+  var list = isSec
+    ? getList(activeSection).map(function(s){return '['+s.severity+'] '+s.type+': '+s.match+' ('+s.source+')';}).join('\n')
     : getList(activeSection).map(function(r){return r.url;}).join('\n');
   navigator.clipboard.writeText(list).then(function(){alert('Copied '+getList(activeSection).length+' items');});
 }
