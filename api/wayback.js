@@ -164,9 +164,11 @@ module.exports = async function(req, res) {
     return res.status(200).json({ results: out });
   }
 
-  // ── ACTION: scan JS/JSON for secrets ─────────────────────────────────────
+  // ── ACTION: scan JS/JSON/HTML pages for secrets + PII ────────────────────
   if (action === 'scan') {
-    var jsUrls = (body.urls || []).slice(0, 15);
+    // urls = JS/JSON files, pages = HTML alive pages
+    var jsUrls   = (body.urls  || []);
+    var pageUrls = (body.pages || []);
     var allSecrets = [];
 
     // scan main page
@@ -175,7 +177,17 @@ module.exports = async function(req, res) {
       allSecrets = allSecrets.concat(scanForSecrets(main.body, 'https://' + domain));
     } catch(e) {}
 
+    // scan JS/JSON files
     await Promise.allSettled(jsUrls.map(async function(url) {
+      try {
+        var r = await fetchRaw(url, 5000);
+        var s = scanForSecrets(r.body, url);
+        if (s.length) allSecrets = allSecrets.concat(s);
+      } catch(e) {}
+    }));
+
+    // scan alive HTML pages for PII
+    await Promise.allSettled(pageUrls.map(async function(url) {
       try {
         var r = await fetchRaw(url, 5000);
         var s = scanForSecrets(r.body, url);
