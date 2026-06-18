@@ -61,6 +61,19 @@ var SECRET_PATTERNS = [
   { type:'Basic Auth URL',     sev:'critical', re:/https?:\/\/[^:@\s]{2,}:[^@\s]{2,}@[^\s"'<>]+/g },
   { type:'Internal Endpoint',  sev:'medium',   re:/https?:\/\/(?:api|internal|dev|staging|admin|backend)\.[a-z0-9.-]+\/[^\s"'<>]{3,}/gi },
   { type:'Private IP',         sev:'low',      re:/(?<![.\d])(?:10\.|172\.(?:1[6-9]|2\d|3[01])\.|192\.168\.)\d{1,3}\.\d{1,3}(?![.\d])/g },
+  // ── PII ──
+  { type:'Email Address',      sev:'medium',   re:/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g },
+  { type:'Phone Number (International)', sev:'medium', re:/(?:\+?[1-9]\d{0,3}[\s\-.]?)?\(?\d{2,4}\)?[\s\-.]?\d{3,4}[\s\-.]?\d{4}/g },
+  { type:'Phone Number (Egypt/Arab)',    sev:'medium', re:/(?:\+?20|00?20)?[\s\-.]?(?:0?1[0-2,5]\d{8}|0?\d{2}[\s\-.]?\d{7,8})/g },
+  { type:'Credit Card Number', sev:'critical', re:/\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12})\b/g },
+  { type:'National ID (Egypt)',sev:'high',     re:/\b[23][0-9]{13}\b/g },
+  { type:'Passport Number',    sev:'high',     re:/\b[A-Z]{1,2}[0-9]{6,9}\b/g },
+  { type:'Physical Address',   sev:'low',      re:/\d{1,5}\s+[A-Za-z\s]{3,30}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Plaza|Square|شارع|طريق|ميدان|حارة)[,\s]+[A-Za-z\s]{2,30}/gi },
+  { type:'Name Field',         sev:'low',      re:/(?:"name"|'name'|"fullName"|'fullName'|"full_name"|'full_name')\s*[:=]\s*["']([A-Za-z\u0600-\u06FF]{2,}\s+[A-Za-z\u0600-\u06FF]{2,}(?:\s+[A-Za-z\u0600-\u06FF]{2,})?)['"]/gi },
+  { type:'Username Hardcoded', sev:'medium',   re:/(?:"username"|'username'|"user_name"|"login")\s*[:=]\s*["']([^"']{3,30})['"]/gi },
+  { type:'IBAN',               sev:'high',     re:/\b[A-Z]{2}\d{2}[A-Z0-9]{4}\d{7}(?:[A-Z0-9]?){0,16}\b/g },
+  { type:'IPv4 Address',       sev:'low',      re:/\b(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g },
+  { type:'MAC Address',        sev:'low',      re:/\b([0-9A-Fa-f]{2}[:\-]){5}[0-9A-Fa-f]{2}\b/g },
 ];
 
 function scanForSecrets(content, sourceUrl) {
@@ -180,3 +193,4 @@ module.exports = async function(req, res) {
 
   res.status(400).json({ error: 'unknown action' });
 };
+// This file will be replaced - just testing append
