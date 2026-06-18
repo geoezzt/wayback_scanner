@@ -261,17 +261,64 @@ async function startScan() {
     }
     allUrls.forEach(function(r){ if(statusMap[r.url]) r.status = statusMap[r.url]; });
 
-    // STEP 3: Secret scan
+    // STEP 3: Secret scan — JS files first, then ALL alive pages in batches
     setStep(2); setStatus('Scanning JS files for secrets...');
-    var jsUrls = allUrls.filter(function(r){return r.tags.includes('js')||r.tags.includes('json')||r.tags.includes('env');}).slice(0,15).map(function(r){return r.url;});
-    var secrets = [];
-    try {
-      var sr = await apiCall({ action:'scan', domain:domain, urls:jsUrls });
-      secrets = sr.secrets || [];
-    } catch(e) {}
+    var jsUrls = allUrls.filter(function(r){
+      return r.tags.includes('js') || r.tags.includes('json') || r.tags.includes('env');
+    }).map(function(r){return r.url;});
+
+    // scan ALL JS/JSON files in batches of 50
+    var jsBatchSize = 50;
+    var jsTotalBatches = Math.ceil(jsUrls.length / jsBatchSize);
+    for (var jb = 0; jb < jsTotalBatches; jb++) {
+      var jsBatch = jsUrls.slice(jb * jsBatchSize, (jb + 1) * jsBatchSize);
+      setStatus('Scanning JS/JSON files: batch ' + (jb+1) + '/' + jsTotalBatches + ' (' + jsUrls.length + ' total)...');
+      try {
+        var sr = await apiCall({ action:'scan', domain:domain, urls:jsBatch, pages:[] });
+        secrets = secrets.concat(sr.secrets || []);
+        if (sr.secrets && sr.secrets.length) {
+          setStatus('JS scan: batch '+(jb+1)+'/'+jsTotalBatches+' — '+secrets.length+' findings so far...');
+        }
+      } catch(e) {}
+    }
+
+    // scan ALL alive pages — no limit, batches of 50
+    var alivePages = allUrls.filter(function(r){
+      return r.status === 200;
+    }).map(function(r){return r.url;});
+
+    // also include unchecked URLs that look like HTML pages
+    var uncheckedPages = allUrls.filter(function(r){
+      return (!r.status || r.status <= 0)
+        && !r.tags.includes('js') && !r.tags.includes('json')
+        && !r.tags.includes('archive') && !r.tags.includes('database');
+    }).map(function(r){return r.url;});
+
+    var allPagesToScan = alivePages.concat(uncheckedPages);
+
+    var batchSize = 50;
+    var totalBatches = Math.ceil(allPagesToScan.length / batchSize);
+    for (var pb = 0; pb < totalBatches; pb++) {
+      var pageBatch = allPagesToScan.slice(pb * batchSize, (pb + 1) * batchSize);
+      setStatus('Scanning pages for sensitive data: batch ' + (pb+1) + '/' + totalBatches + ' (' + allPagesToScan.length + ' pages total)...');
+      try {
+        var pr = await apiCall({ action:'scan', domain:domain, urls:[], pages:pageBatch });
+        secrets = secrets.concat(pr.secrets || []);
+        if (pr.secrets && pr.secrets.length) {
+          setStatus('Scanning pages: batch '+(pb+1)+'/'+totalBatches+' — '+secrets.length+' findings so far...');
+        }
+      } catch(e) {}
+    }
 
     // Build result
-    setStep(3); setStatus('✅ Done — ' + allUrls.length + ' URLs · ' + secrets.length + ' secrets');
+    // dedup all secrets across batches
+    var seenSec = {};
+    secrets = secrets.filter(function(s){
+      var k = s.type+'|'+s.match.slice(0,40);
+      if(seenSec[k]) return false; seenSec[k]=true; return true;
+    });
+
+    setStep(3); setStatus('✅ Done — ' + allUrls.length + ' URLs · ' + secrets.length + ' findings (secrets + PII)');
 
     function filterBy(fn){ return allUrls.filter(fn); }
     var inc = function(r,t){ return r.tags.includes(t); };
